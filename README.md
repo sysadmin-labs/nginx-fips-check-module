@@ -66,7 +66,7 @@ as well.
 
 ## License
 
-Apache License 2.0.  The module is Owen Garrett's; the `NOTICE` file next
-to [LICENSE](LICENSE) is his and travels with the work, as that licence
-asks.  The scaffolding around it is under the same terms; see
-[LICENSE](LICENSE).
+Apache License 2.0, the module and the scaffolding around it alike; see
+[LICENSE](LICENSE).  The module is Owen Garrett's, and so is the `NOTICE`
+file beside it -- that licence asks for it to travel with the work, so it
+does.
