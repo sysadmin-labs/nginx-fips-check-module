@@ -1,0 +1,21 @@
+ngx_addon_name=ngx_fips_check_module
+
+FIPS_CHECK_SRCS="$ngx_addon_dir/src/ngx_core_fips_check_module.c"
+
+# No libraries are added here on purpose.  The module calls into libcrypto
+# -- FIPS_mode() on OpenSSL 1.x, EVP_default_properties_is_fips_enabled()
+# on 3.x -- and takes it from the nginx it is built into: a static build
+# needs an nginx configured with SSL for the symbol to resolve at link
+# time, and a loadable build resolves it against the running binary.  An
+# nginx without SSL has no FIPS mode to report in the first place.
+
+if [ -n "$ngx_module_link" ]; then
+    ngx_module_type=CORE
+    ngx_module_name=ngx_fips_check_module
+    ngx_module_srcs="$FIPS_CHECK_SRCS"
+
+    . auto/module
+else
+    CORE_MODULES="$CORE_MODULES ngx_fips_check_module"
+    NGX_ADDON_SRCS="$NGX_ADDON_SRCS $FIPS_CHECK_SRCS"
+fi
