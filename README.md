@@ -39,14 +39,6 @@ serving.
 What it does not do: enable anything.  FIPS mode is a property of the
 OpenSSL the server links against, set up outside nginx.
 
-## What "enabled" depends on
-
-FIPS mode is a property of the libcrypto the server links against, not of
-nginx: the FIPS provider has to be present, installed and selected as the
-default.  Where it is not, this module says so -- which is the point of
-asking the process rather than the configuration that was meant to arrange
-it.
-
 ## Building
 
 ```sh
