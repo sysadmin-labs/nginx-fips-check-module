@@ -9,9 +9,8 @@ Newest first.  Dates are release dates.
 - **The static branch of `config` named a file that does not exist.**  The
   loadable branch compiles `ngx_core_fips_check_module.c`, the static one
   asked for `ngx_fips_check_module.c`, so an nginx configured with
-  `--add-module` instead of `--add-dynamic-module` failed to build.  It
-  went unnoticed because every FreeBSD nginx port builds its third-party
-  modules as loadable objects, which is the branch that was right.
+  `--add-module` instead of `--add-dynamic-module` failed to build.  The
+  loadable branch is the one everybody uses, which is why it survived.
 
 ### Changed
 

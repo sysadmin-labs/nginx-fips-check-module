@@ -39,32 +39,13 @@ serving.
 What it does not do: enable anything.  FIPS mode is a property of the
 OpenSSL the server links against, set up outside nginx.
 
-## What it takes to see "enabled"
+## What "enabled" depends on
 
-The module reads `FIPS_mode()`, which on OpenSSL 3 is
-`EVP_default_properties_is_fips_enabled(NULL)` -- so it answers yes when
-the default properties of the library say `fips=yes`, and that needs the
-FIPS provider to be present, installed and switched on:
-
-1. A libcrypto with a FIPS provider.  FreeBSD's base OpenSSL has none:
-   `/usr/lib/ossl-modules/` holds `legacy.so` and nothing else, and
-   `openssl list -providers` shows only the default one.  `security/openssl`
-   builds `fips.so` with its `FIPS` option, and says of it: *"NOT yet FIPS
-   validated"*.
-2. `openssl fipsinstall -out <prefix>/etc/ssl/fipsmodule.cnf -module
-   <prefix>/lib/ossl-modules/fips.so`, which runs the self-tests and writes
-   the module's MAC.  The provider does not load without that file.
-3. `openssl.cnf`: `.include fipsmodule.cnf`, a `[provider_sect]` naming
-   `fips` **and** `base` -- leave `base` out and everything that is not a
-   FIPS algorithm disappears, PEM reading included -- and an `alg_section`
-   with `default_properties = fips=yes`, which is the switch this module
-   reads.
-4. An nginx built against that libcrypto.  On FreeBSD that means
-   `DEFAULT_VERSIONS+=ssl=openssl` rather than base.
-
-Step 3 is a global change to the host's OpenSSL configuration, not an
-nginx one: every program using that libcrypto is in FIPS mode afterwards.
-And none of it makes the result *validated* -- it makes it FIPS mode.
+FIPS mode is a property of the libcrypto the server links against, not of
+nginx: the FIPS provider has to be present, installed and selected as the
+default.  Where it is not, this module says so -- which is the point of
+asking the process rather than the configuration that was meant to arrange
+it.
 
 ## Building
 
@@ -77,10 +58,6 @@ The module needs libcrypto and takes it from nginx: a static build has to
 be an nginx configured with SSL, a loadable one resolves the symbol
 against the running binary.  An nginx without SSL has no FIPS mode to
 report anyway.
-
-On FreeBSD the ports tree builds this as `www/nginx-module-fips-check`,
-and the three nginx server ports pick the sources up from there with their
-`FIPS_CHECK` option.
 
 ## Testing
 
